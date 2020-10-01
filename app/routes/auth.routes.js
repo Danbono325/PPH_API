@@ -9,6 +9,14 @@ const isLoggedIn = (req, res, next) => {
 };
 
 module.exports = (app) => {
+  app.get("/success", isLoggedIn, (req, res) => res.send(req.user));
+
+  app.get("/logout", (req, res) => {
+    req.session = null;
+    req.logout();
+    res.redirect("/");
+  });
+
   // Sign in with Google
   // GET /google
   //   Use passport.authenticate() as route middleware to authenticate the
@@ -31,20 +39,25 @@ module.exports = (app) => {
     "/google/callback",
     passport.authenticate("google", {
       failureRedirect: "/",
-      // successRedirect: "/success",
     }),
     function (req, res) {
+      console.log("req.user", req.user);
       res.redirect("/success");
     }
   );
 
-  app.get("/success", isLoggedIn, (req, res) =>
-    res.send(`Welcome Mr. ${req.user.username}`)
+  // GITHUB ROUTES
+  app.get(
+    "/github",
+    passport.authenticate("github", { scope: ["user:email"] })
   );
 
-  app.get("/logout", (req, res) => {
-    req.session = null;
-    req.logout();
-    res.redirect("/");
-  });
+  app.get(
+    "/github/callback",
+    passport.authenticate("github", { failureRedirect: "/" }),
+    function (req, res) {
+      // Successful authentication, redirect home.
+      res.redirect("/success");
+    }
+  );
 };

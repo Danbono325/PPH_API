@@ -2,6 +2,8 @@ const sql = require("./db");
 
 class User {
   constructor(user) {
+    this.idUsers = user.idUsers;
+    this.newUser = user.newUser;
     this.email = user.email;
     this.password = user.password;
     this.username = user.username;

@@ -1,5 +1,6 @@
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
+const GitHubStrategy = require("passport-github2");
 const bcrypt = require("bcryptjs");
 const User = require("../models/User.Model");
 
@@ -22,6 +23,7 @@ module.exports = function (passport) {
         const userSign = new User({
           email: profile._json.email,
           username: profile._json.name,
+          newUser: false,
         });
 
         userSign.checkUser((err, user) => {
@@ -34,10 +36,18 @@ module.exports = function (passport) {
 
           if (user) {
             // Login
-            return done(null, user);
+            const existingUser = new User({
+              idUsers: user.idUsers,
+              newUser: false,
+              email: user.email,
+              username: user.username,
+            });
+            return done(null, existingUser);
           } else {
-            // CREATE USER IN OUR DB
+            // Redirect to ask for username
+            // ADD USER IN OUR DB
             // return done(null, { email: userSign.email });
+            userSign.newUser = true;
             return done(null, userSign);
           }
         });
@@ -53,6 +63,23 @@ module.exports = function (passport) {
         //   // res.send(data);
         // });
         // return done(err, user);
+      }
+    )
+  );
+
+  // Github oauth
+  passport.use(
+    new GitHubStrategy(
+      {
+        clientID: "f06505f150995e4cef4b",
+        clientSecret: "90625cdd18104d44ae55d2318c080131ac7f9ffd",
+        callbackURL: "http://localhost:3000/github/callback",
+      },
+      function (accessToken, refreshToken, profile, done) {
+        // User.findOrCreate({ githubId: profile.id }, function (err, user) {
+        //   return done(err, user);
+        // });
+        console.log(profile);
       }
     )
   );
