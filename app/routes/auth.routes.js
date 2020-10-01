@@ -47,10 +47,7 @@ module.exports = (app) => {
   );
 
   // GITHUB ROUTES
-  app.get(
-    "/github",
-    passport.authenticate("github", { scope: ["user:email"] })
-  );
+  app.get("/github", passport.authenticate("github"));
 
   app.get(
     "/github/callback",
