@@ -7,7 +7,7 @@ class User {
     this.username = user.username;
   }
 
-  create(newUser, result) {
+  create(result) {
     sql.query("INSERT INTO users SET ?", this, (err, res) => {
       if (err) {
         console.log("Error: ", err);
@@ -15,8 +15,32 @@ class User {
         return;
       }
 
-      console.log("Created User: ", { id: res.insertId, ...newUser });
-      result(null, { id: res.insertId, ...newUser });
+      console.log("Created User: ", { id: res.insertId, ...this });
+      result(null, { id: res.insertId, ...this });
+    });
+  }
+
+  checkUser(result) {
+    sql.query("SELECT * FROM users WHERE email = ?", this.email, (err, res) => {
+      if (err) {
+        console.log("Error: ", err);
+        result(err, null);
+        return;
+      }
+
+      result(null, res[0]);
+    });
+  }
+
+  static findById(id, result) {
+    sql.query("SELECT * FROM users WHERE idUsers = ?", id, (err, res) => {
+      if (err) {
+        console.log("Error: ", err);
+        result(err, null);
+        return;
+      }
+
+      result(null, res[0]);
     });
   }
 }

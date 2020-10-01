@@ -1,11 +1,14 @@
 const passport = require("passport");
 
+const isLoggedIn = (req, res, next) => {
+  if (req.user) {
+    next();
+  } else {
+    res.sendStatus(401);
+  }
+};
+
 module.exports = (app) => {
-  const users = require("../controllers/user.controller.js");
-
-  // Create a new User
-  app.post("/users", users.create);
-
   // Sign in with Google
   // GET /google
   //   Use passport.authenticate() as route middleware to authenticate the
@@ -34,4 +37,14 @@ module.exports = (app) => {
       res.redirect("/success");
     }
   );
+
+  app.get("/success", isLoggedIn, (req, res) =>
+    res.send(`Welcome Mr. ${req.user.username}`)
+  );
+
+  app.get("/logout", (req, res) => {
+    req.session = null;
+    req.logout();
+    res.redirect("/");
+  });
 };
