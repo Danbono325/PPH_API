@@ -20,10 +20,12 @@
     "cookie-session": "^1.4.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "express-session": "^1.17.1",
     "mysql": "^2.18.1",
     "passport": "^0.4.1",
     "passport-github2": "^0.1.12",
-    "passport-google-oauth": "^2.0.0"
+    "passport-google-oauth": "^2.0.0",
+    "session": "^0.1.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"

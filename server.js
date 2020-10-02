@@ -3,28 +3,17 @@ const bodyParser = require("body-parser");
 const passport = require("passport");
 const cookieSession = require("cookie-session");
 const cors = require("cors");
+var session = require("express-session");
 
 const app = express();
 
-app.use(function (req, res, next) {
-  var allowedOrigins = [
-    "http://localhost:4200",
-    "https://hawksbaseballpitchplus.csse-projects.monmouth.edu",
-  ];
-  var origin = req.headers.origin;
-  if (allowedOrigins.indexOf(origin) > -1) {
-    res.setHeader("Access-Control-Allow-Origin", origin);
-  }
-  //res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:8020');
-  res.header("Access-Control-Allow-Methods", "GET, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.header("Access-Control-Allow-Credentials", true);
-  return next();
-});
-
-app.use(cors());
-
-require("./app/config/passport")(passport);
+app.use(
+  cors({
+    origin: "http://localhost:4200", // allow to server to accept request from different origin
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true, // allow session cookie from browser to pass through
+  })
+);
 
 // parse requests of content-type: application/json
 app.use(bodyParser.json());
@@ -40,9 +29,17 @@ app.use(
 );
 
 // Passport middleware
+app.use(
+  session({
+    secret: "keyboard cat",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true },
+  })
+);
 app.use(passport.initialize());
 app.use(passport.session());
-
+require("./app/config/passport")(passport);
 // simple route
 app.get("/", (req, res) => {
   res.json({ Message: "Welcome to Project Plan Hub application." });

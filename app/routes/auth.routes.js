@@ -1,16 +1,17 @@
 const passport = require("passport");
 
-const isLoggedIn = (req, res, next) => {
-  if (req.user) {
-    next();
-  } else {
-    res.sendStatus(401);
-  }
-};
-
 module.exports = (app) => {
-  app.get("/success", (req, res) => {
-    // res.send(req);
+  const isLoggedIn = (req, res, next) => {
+    console.log("INSIDE IS LOGGED IN", req);
+    if (req.user) {
+      next();
+    } else {
+      res.sendStatus(401);
+    }
+  };
+
+  app.get("/success", isLoggedIn, (req, res) => {
+    // res.send(req.user);
 
     console.log(req);
     res.json({
@@ -19,13 +20,13 @@ module.exports = (app) => {
       user: req.user,
       cookies: req.cookies,
     });
-    // res.redirect("http://localhost:4200");
+    // res.redirect("http://localhost:3000");
   });
 
   app.get("/logout", (req, res) => {
     req.session = null;
     req.logout();
-    res.redirect("/");
+    res.redirect("http://localhost:4200");
   });
 
   // Sign in with Google
@@ -58,18 +59,24 @@ module.exports = (app) => {
   );
 
   // GITHUB ROUTES
-  app.get("/github", passport.authenticate("github"));
+  app.get("/github", passport.authenticate("github", { session: true }));
 
   app.get(
     "/github/callback",
     passport.authenticate("github", {
       failureRedirect: "/",
-      // successRedirect: "http://localhost:4200",
-    }),
-    function (req, res) {
-      // Successful authentication, redirect home.
-      res.redirect("/success");
-      // console.log(req.user);
-    }
+      successRedirect: "http://localhost:4200",
+    })
+    // function (req, res) {
+    // Successful authentication, redirect home.
+    // res.redirect("/success");
+    // console.log(req.user);
+    // res.json({
+    //   success: true,
+    //   message: "user has successfully authenticated",
+    //   user: req.user,
+    //   cookies: req.cookies,
+    // });
+    // }
   );
 };

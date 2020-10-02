@@ -59,8 +59,8 @@ module.exports = function (passport) {
   passport.use(
     new GitHubStrategy(
       {
-        clientID: "f06505f150995e4cef4b",
-        clientSecret: "90625cdd18104d44ae55d2318c080131ac7f9ffd",
+        clientID: "71ea2d964ad26423bd2a",
+        clientSecret: "4404c755c277a4df3e0bf86d26b55ca3e4f9e900",
         callbackURL: "http://localhost:3000/github/callback",
         scope: ["user:email"],
       },
@@ -69,7 +69,7 @@ module.exports = function (passport) {
         //   return done(err, user);
         // });
         // console.log(profile);
-
+        console.log("INSIDE STRAT");
         const userSign = new User({
           email: profile.emails[0].value,
           username: profile.username,
@@ -92,6 +92,7 @@ module.exports = function (passport) {
               email: user.email,
               username: user.username,
             });
+            console.log("EXISTING USER: ", existingUser);
             return done(null, existingUser);
           } else {
             userSign.newUser = true;
@@ -103,14 +104,16 @@ module.exports = function (passport) {
   );
 
   passport.serializeUser((user, done) => {
+    console.log(user);
     done(null, user);
   });
 
   passport.deserializeUser((user, done) => {
+    console.log("INSIDE DESERIALIZE", user);
     if (user.newUser) {
       done(null, user);
     } else {
-      console.log("USERS user.IdUsers: ", user);
+      // console.log("USERS user.IdUsers: ", user);
       User.findById(user.idUsers, (err, foundUser) => {
         if (err)
           // res.status(500).send({
@@ -118,7 +121,9 @@ module.exports = function (passport) {
           //     err.message || "Some error occurred while creating the User.",
           // });
           console.log("err", err);
-        else done(null, foundUser);
+        else {
+          done(null, user);
+        }
       });
     }
   });
