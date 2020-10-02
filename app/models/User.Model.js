@@ -35,6 +35,7 @@ class User {
   }
 
   static findById(id, result) {
+    console.log("ID IS: ", id);
     sql.query("SELECT * FROM users WHERE idUsers = ?", id, (err, res) => {
       if (err) {
         console.log("Error: ", err);

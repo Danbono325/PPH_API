@@ -9,7 +9,18 @@ const isLoggedIn = (req, res, next) => {
 };
 
 module.exports = (app) => {
-  app.get("/success", isLoggedIn, (req, res) => res.send(req.user));
+  app.get("/success", (req, res) => {
+    // res.send(req);
+
+    console.log(req);
+    res.json({
+      success: true,
+      message: "user has successfully authenticated",
+      user: req.user,
+      cookies: req.cookies,
+    });
+    // res.redirect("http://localhost:4200");
+  });
 
   app.get("/logout", (req, res) => {
     req.session = null;
@@ -51,10 +62,14 @@ module.exports = (app) => {
 
   app.get(
     "/github/callback",
-    passport.authenticate("github", { failureRedirect: "/" }),
+    passport.authenticate("github", {
+      failureRedirect: "/",
+      // successRedirect: "http://localhost:4200",
+    }),
     function (req, res) {
       // Successful authentication, redirect home.
       res.redirect("/success");
+      // console.log(req.user);
     }
   );
 };

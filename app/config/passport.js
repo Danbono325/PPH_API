@@ -68,7 +68,7 @@ module.exports = function (passport) {
         // User.findOrCreate({ githubId: profile.id }, function (err, user) {
         //   return done(err, user);
         // });
-        console.log(profile);
+        // console.log(profile);
 
         const userSign = new User({
           email: profile.emails[0].value,
@@ -103,18 +103,23 @@ module.exports = function (passport) {
   );
 
   passport.serializeUser((user, done) => {
-    done(null, user.idUsers);
+    done(null, user);
   });
 
-  passport.deserializeUser((id, done) => {
-    User.findById(id, (err, user) => {
-      if (err)
-        // res.status(500).send({
-        //   message:
-        //     err.message || "Some error occurred while creating the User.",
-        // });
-        console.log("err", err);
-      else done(null, user);
-    });
+  passport.deserializeUser((user, done) => {
+    if (user.newUser) {
+      done(null, user);
+    } else {
+      console.log("USERS user.IdUsers: ", user);
+      User.findById(user.idUsers, (err, foundUser) => {
+        if (err)
+          // res.status(500).send({
+          //   message:
+          //     err.message || "Some error occurred while creating the User.",
+          // });
+          console.log("err", err);
+        else done(null, foundUser);
+      });
+    }
   });
 };
