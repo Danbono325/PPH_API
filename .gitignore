@@ -1,4 +1,4 @@
 # .gitignore 
 node_modules
 package-lock.json
-db.config.js
+\app\config\db.config.js
