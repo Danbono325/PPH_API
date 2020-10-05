@@ -1,5 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+
 const passport = require("passport");
 const cookieSession = require("cookie-session");
 const cors = require("cors");
@@ -21,6 +23,8 @@ app.use(bodyParser.json());
 // parse requests of content-type: application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(cookieParser());
+
 app.use(
   cookieSession({
     name: "pph-session",
@@ -37,6 +41,7 @@ app.use(
     cookie: { secure: true },
   })
 );
+
 app.use(passport.initialize());
 app.use(passport.session());
 require("./app/config/passport")(passport);

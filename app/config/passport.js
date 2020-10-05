@@ -1,10 +1,53 @@
 const passport = require("passport");
+const JwtStrategy = require("passport-jwt").Strategy;
+const ExtractJwt = require("passport-jwt").ExtractJwt;
 const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 const GitHubStrategy = require("passport-github2").Strategy;
 const bcrypt = require("bcryptjs");
 const User = require("../models/User.Model");
 
+var opts = {};
+opts.jwtFromRequest = function (req) {
+  // tell passport to read JWT from cookies
+  var token = null;
+  if (req && req.cookies) {
+    token = req.cookies["jwt"];
+  }
+  return token;
+};
+opts.secretOrKey = "secret";
+// opts.secretOrKey = config.secretOrKey
+
 module.exports = function (passport) {
+  // Sign in with email and password (w/o oauth)
+  passport.use(
+    new JwtStrategy(opts, function (jwt_payload, done) {
+      console.log("JWT BASED AUTH GETTING CALLED"); // called everytime a protected URL is being served
+      // console.log("jwt_payload.data ", jwt_payload.data);
+      const userSign = new User(jwt_payload.data);
+      userSign.checkUser((err, user) => {
+        if (err) return done(err, null);
+        // Match password
+        else if (!user) {
+          return done(null, {
+            message: `No user found with email ${userSign.email}`,
+          });
+        } else
+          bcrypt.compare(userSign.password, user.password, (err, isMatch) => {
+            if (err) throw err;
+
+            if (isMatch) {
+              return done(null, user);
+            } else {
+              return done(null, {
+                message: "Invalid Login Credentials",
+              });
+            }
+          });
+      });
+    })
+  );
+
   // Use the GoogleStrategy within Passport.
   //   Strategies in Passport require a `verify` function, which accept
   //   credentials (in this case, an accessToken, refreshToken, and Google

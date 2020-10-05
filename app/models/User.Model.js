@@ -10,7 +10,9 @@ class User {
   }
 
   create(result) {
-    sql.query("INSERT INTO users SET ?", this, (err, res) => {
+    const fields = [this.email, this.username, this.password];
+    const query = `INSERT INTO users (email, username, password) VALUES (?, ?, ?)`;
+    sql.query(query, fields, (err, res) => {
       if (err) {
         console.log("Error: ", err);
         result(err, null);

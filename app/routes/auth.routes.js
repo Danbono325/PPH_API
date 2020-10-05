@@ -1,9 +1,12 @@
 const passport = require("passport");
+const jwt = require("jsonwebtoken");
+
+const User = require("../models/User.Model");
 
 module.exports = (app) => {
   const isLoggedIn = (req, res, next) => {
     console.log("INSIDE IS LOGGED IN", req);
-    if (req.user) {
+    if (req.user || req.cookies.jwt) {
       next();
     } else {
       res.sendStatus(401);
@@ -26,7 +29,46 @@ module.exports = (app) => {
   app.get("/logout", (req, res) => {
     req.session = null;
     req.logout();
-    res.redirect("http://localhost:4200");
+    // res.redirect("http://localhost:4200");
+    res.redirect("/");
+  });
+
+  // Sign in with Email and Password
+  app.post("/email", (req, res) => {
+    const userSign = new User(req.body);
+    userSign.checkUser((err, user) => {
+      if (err) {
+        res.status(500).send({
+          message: err.message || "Some error database occurred.",
+        });
+      } else if (user) {
+        // HAVE TO CHANGE TO HASH PASSWORD
+        if (
+          userSign.email === user.email &&
+          userSign.password === user.password
+        ) {
+          let token = jwt.sign(
+            {
+              data: user,
+            },
+            "secret",
+            { expiresIn: "1h" }
+          ); // expiry in seconds or duration strings
+          res.cookie("jwt", token);
+          res.send(`Log in success ${user.email}`);
+        } else {
+          res.send("Invalid login credentials");
+        }
+      }
+    });
+  });
+
+  // Get Logged in User
+  app.get("/email", passport.authenticate("jwt", { session: true }), function (
+    req,
+    res
+  ) {
+    res.send(req.user);
   });
 
   // Sign in with Google
