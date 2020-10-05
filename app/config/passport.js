@@ -27,23 +27,9 @@ module.exports = function (passport) {
       const userSign = new User(jwt_payload.data);
       userSign.checkUser((err, user) => {
         if (err) return done(err, null);
-        // Match password
-        else if (!user) {
-          return done(null, {
-            message: `No user found with email ${userSign.email}`,
-          });
-        } else
-          bcrypt.compare(userSign.password, user.password, (err, isMatch) => {
-            if (err) throw err;
-
-            if (isMatch) {
-              return done(null, user);
-            } else {
-              return done(null, {
-                message: "Invalid Login Credentials",
-              });
-            }
-          });
+        if (user) {
+          return done(null, userSign);
+        } else return done({ message: "User not found" }, null);
       });
     })
   );

@@ -1,5 +1,6 @@
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 const User = require("../models/User.Model");
 
@@ -43,22 +44,23 @@ module.exports = (app) => {
         });
       } else if (user) {
         // HAVE TO CHANGE TO HASH PASSWORD
-        if (
-          userSign.email === user.email &&
-          userSign.password === user.password
-        ) {
-          let token = jwt.sign(
-            {
-              data: user,
-            },
-            "secret",
-            { expiresIn: "1h" }
-          ); // expiry in seconds or duration strings
-          res.cookie("jwt", token);
-          res.send(`Log in success ${user.email}`);
-        } else {
-          res.send("Invalid login credentials");
-        }
+        bcrypt.compare(userSign.password, user.password, (err, isMatch) => {
+          if (err) throw err;
+
+          if (isMatch) {
+            let token = jwt.sign(
+              {
+                data: user,
+              },
+              "secret",
+              { expiresIn: "1h" }
+            ); // expiry in seconds or duration strings
+            res.cookie("jwt", token);
+            res.send(`Log in success ${user.email}`);
+          } else {
+            res.send("Invalid login credentials");
+          }
+        });
       }
     });
   });
