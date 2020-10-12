@@ -16,6 +16,7 @@ opts.jwtFromRequest = function (req) {
   return token;
 };
 opts.secretOrKey = "secret";
+` `;
 // opts.secretOrKey = config.secretOrKey
 
 module.exports = function (passport) {

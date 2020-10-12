@@ -36,6 +36,7 @@ module.exports = (app) => {
 
   // Sign in with Email and Password
   app.post("/email", (req, res) => {
+    console.log("REQ: ", req.body);
     const userSign = new User(req.body);
     userSign.checkUser((err, user) => {
       if (err) {
@@ -56,8 +57,8 @@ module.exports = (app) => {
               { expiresIn: "1h" }
             ); // expiry in seconds or duration strings
             res.cookie("jwt", token);
-            console.log("res.cookies", res.cookie.jwt);
-            res.send(`Log in success ${user.email}`);
+            console.log(res.cookies);
+            res.send({ idUsers: user.idUsers });
           } else {
             res.send("Invalid login credentials");
           }
@@ -112,16 +113,5 @@ module.exports = (app) => {
       failureRedirect: "/",
       successRedirect: "http://localhost:4200",
     })
-    // function (req, res) {
-    // Successful authentication, redirect home.
-    // res.redirect("/success");
-    // console.log(req.user);
-    // res.json({
-    //   success: true,
-    //   message: "user has successfully authenticated",
-    //   user: req.user,
-    //   cookies: req.cookies,
-    // });
-    // }
   );
 };

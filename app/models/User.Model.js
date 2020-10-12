@@ -1,4 +1,5 @@
 const sql = require("./db");
+const jwt = require("jsonwebtoken");
 
 class User {
   constructor(user) {
@@ -18,8 +19,8 @@ class User {
         result(err, null);
         return;
       }
-
       console.log("Created User: ", { id: res.insertId, ...this });
+
       result(null, { id: res.insertId, ...this });
     });
   }
