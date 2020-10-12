@@ -44,7 +44,9 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+
 require("./app/config/passport")(passport);
+
 // simple route
 app.get("/", (req, res) => {
   res.json({ Message: "Welcome to Project Plan Hub application." });

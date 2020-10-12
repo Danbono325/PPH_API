@@ -56,6 +56,7 @@ module.exports = (app) => {
               { expiresIn: "1h" }
             ); // expiry in seconds or duration strings
             res.cookie("jwt", token);
+            console.log("res.cookies", res.cookie.jwt);
             res.send(`Log in success ${user.email}`);
           } else {
             res.send("Invalid login credentials");
