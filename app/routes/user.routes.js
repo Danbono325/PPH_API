@@ -5,4 +5,13 @@ module.exports = (app) => {
 
   // Create a new User
   app.post("/createUser", users.create);
+
+  // Follow another User
+  app.post("/followUser", users.followUser);
+
+  // Get followers
+  app.get("/followers", users.getFollowers);
+
+  // Get following
+  app.get("/following", users.getFollowing);
 };
