@@ -89,6 +89,45 @@ class User {
       result(null, res);
     });
   }
+
+    // REQUEST TO FOLLOW
+    static followRequest(curId, id, result) {
+      var fields = [curId, id];
+      sql.query("CALL followRequest(?, ?);", fields, (err, res) => {
+        if (err) {
+          console.log("Error: ", err);
+          result(err, null);
+          return;
+        }
+        result(null, res);
+      });
+    }
+
+    // REQUEST TO COLLAB
+    static collabRequest(curId, id, result) {
+      var fields = [curId, id];
+      sql.query("CALL collabRequest(?, ?);", fields, (err, res) => {
+        if (err) {
+          console.log("Error: ", err);
+          result(err, null);
+          return;
+        }
+        result(null, res);
+      });
+    }
+
+    // REQUEST TO MENTOR
+    static mentorRequest(curId, id, result) {
+      var fields = [curId, id];
+      sql.query("CALL mentorRequest(?, ?);", fields, (err, res) => {
+        if (err) {
+          console.log("Error: ", err);
+          result(err, null);
+          return;
+        }
+        result(null, res);
+      });
+    }
 }
 
 module.exports = User;

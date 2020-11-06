@@ -125,5 +125,61 @@ exports.getFollowing = (req, res) => {
       else res.status(200).send(response);
     }
   }) 
+}
 
+// REQUEST TO FOLLOW
+exports.followRequest = (req, res) => {
+  // Validate request
+  checkbody(req);
+
+  User.followRequest(req.body.curUser, req.body.requestedUser, (err, response) => {
+    if(err) {
+      res.status(500).send({
+        message:
+          err.message || "An Error occurred.",
+      });
+    } else {
+        res.status(200).send({
+          message: 'Request sent'
+        });
+    }
+  }) 
+}
+
+// REQUEST TO COLLAB
+exports.collabRequest = (req, res) => {
+  // Validate request
+  checkbody(req);
+
+  User.collabRequest(req.body.curUser, req.body.requestedUser, (err, response) => {
+    if(err) {
+      res.status(500).send({
+        message:
+          err.message || "An Error occurred.",
+      });
+    } else {
+        res.status(200).send({
+          message: 'Request sent'
+        });
+    }
+  }) 
+}
+
+// REQUEST TO MENTOR
+exports.mentorRequest = (req, res) => {
+  // Validate request
+  checkbody(req);
+
+  User.mentorRequest(req.body.curUser, req.body.requestedUser, (err, response) => {
+    if(err) {
+      res.status(500).send({
+        message:
+          err.message || "An Error occurred.",
+      });
+    } else {
+        res.status(200).send({
+          message: 'Request sent'
+        });
+    }
+  }) 
 }

@@ -14,4 +14,13 @@ module.exports = (app) => {
 
   // Get following
   app.get("/following", users.getFollowing);
+
+  // Request to follow
+  app.post("/followRequest", users.followRequest);
+
+  // Request to collab
+  app.post("/collabRequest", users.collabRequest);
+
+  // // Request to mentor
+  app.post("/mentorRequest", users.mentorRequest);
 };
