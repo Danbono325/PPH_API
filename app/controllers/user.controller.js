@@ -40,48 +40,6 @@ exports.create = (req, res) => {
   );
 };
 
-// FOLLOW A USER
-exports.followUser = (req, res) => {
-  // Validate request
-  checkbody(req);
-
-  // Check follow user is in DB
-  User.findById(req.body.folUser, (err, foundUser) => {
-    if (err) {
-      res.status(500).send({
-        message:
-          err.message || "User not found.",
-      });
-    }
-    else {
-      // Check follow user is in DB
-      User.findById(req.body.curUser, (err, foundUser) => {
-        if (err) {
-          res.status(500).send({
-            message:
-              err.message || "User not found.",
-          });
-        }
-        else {
-          // Both Users found curUser calls followUser
-          User.followUser(req.body.curUser, req.body.folUser, (err) => {
-            if(err) {
-              res.status(500).send({
-                message:
-                  err.message || "An Error occurred.",
-              });
-            } else {
-              res.send({
-                message: "User followed.",
-              })
-            }
-          });
-        }
-      });
-    }
-  });
-}
-
 // GET ALL FOLLOWERS
 exports.getFollowers = (req, res) => {
   // Validate request
@@ -151,7 +109,7 @@ exports.collabRequest = (req, res) => {
   // Validate request
   checkbody(req);
 
-  User.collabRequest(req.body.curUser, req.body.requestedUser, (err, response) => {
+  User.collabRequest(req.body.curUser, req.body.requestedProject, (err, response) => {
     if(err) {
       res.status(500).send({
         message:
@@ -170,7 +128,7 @@ exports.mentorRequest = (req, res) => {
   // Validate request
   checkbody(req);
 
-  User.mentorRequest(req.body.curUser, req.body.requestedUser, (err, response) => {
+  User.mentorRequest(req.body.curUser, req.body.requestedProject, (err, response) => {
     if(err) {
       res.status(500).send({
         message:
@@ -179,6 +137,101 @@ exports.mentorRequest = (req, res) => {
     } else {
         res.status(200).send({
           message: 'Request sent'
+        });
+    }
+  }) 
+}
+
+// Accept Follower
+exports.acceptFollower = (req, res) => {
+  // Validate request
+  checkbody(req);
+
+  User.acceptFollower(req.body.reqID, (err, response) => {
+    if(err) {
+      res.status(500).send({
+        message:
+          err.message || "An Error occurred.",
+      });
+    } else {
+        res.status(200).send({
+          message: 'Follower Acceptor'
+        });
+    }
+  }) 
+}
+
+// Accept Collaborator
+exports.acceptCollaborator = (req, res) => {
+  // Validate request
+  checkbody(req);
+
+  User.acceptCollaborator(req.body.reqID, (err, response) => {
+    if(err) {
+      res.status(500).send({
+        message:
+          err.message || "An Error occurred.",
+      });
+    } else {
+        res.status(200).send({
+          message: 'Collaborator Acceptor'
+        });
+    }
+  }) 
+}
+
+// Accept Mentor
+exports.acceptMentor = (req, res) => {
+  // Validate request
+  checkbody(req);
+
+  User.acceptMentor(req.body.reqID, (err, response) => {
+    if(err) {
+      res.status(500).send({
+        message:
+          err.message || "An Error occurred.",
+      });
+    } else {
+        res.status(200).send({
+          message: 'Mentor Acceptor'
+        });
+    }
+  }) 
+}
+
+// Reject Follower
+exports.rejectFollower = (req, res) => {
+  // Validate request
+  checkbody(req);
+
+  User.rejectFollower(req.body.reqID, (err, response) => {
+    if(err) {
+      res.status(500).send({
+        message:
+          err.message || "An Error occurred.",
+      });
+    } else {
+        res.status(200).send({
+          message: 'Follower Rejected'
+        });
+    }
+  }) 
+}
+
+// Reject Collaborator / Mentor
+exports.rejectCollMen = (req, res) => {
+  // Validate request
+  checkbody(req);
+
+  User.rejectCollMen(req.body.reqID, (err, response) => {
+    if(err) {
+      res.status(500).send({
+        message:
+          err.message || "An Error occurred.",
+      });
+    } else {
+        res.status(200).send({
+          message: 'Collaborator / Mentor Rejected'
         });
     }
   }) 

@@ -50,25 +50,9 @@ class User {
     });
   }
 
-
-
-  // FOLLOW A ANOTHER USER
-  static followUser(curId, id, result) {
-    const fields = [curId, id];
-    sql.query("CALL followUser(?, ?);", fields, (err, res) => {
-      if (err) {
-        console.log("Error: ", err);
-        result(err);
-        return;
-      }
-      // console.log("res", result);
-      result(null);
-    });
-  }
-
   // GET ALL FOLLOWING 
   static getFollowers(id, result) {
-    sql.query("SELECT idUsers, username FROM users u JOIN following f ON u.idUsers = f.users_idUsers WHERE following = ?;", id, (err, res) => {
+    sql.query("SELECT idUsers, username FROM users u JOIN following f ON f.following = u.idUsers WHERE f.users_idUsers = ?;", id, (err, res) => {
       if (err) {
         console.log("Error: ", err);
         result(err, null);
@@ -80,7 +64,7 @@ class User {
 
   // GET ALL FOLLOWING
   static getFollowing(id, result) {
-    sql.query("SELECT idUsers, username FROM users u JOIN following f ON f.following = u.idUsers WHERE f.users_idUsers = ?;", id, (err, res) => {
+    sql.query("SELECT idUsers, username FROM users u JOIN following f ON u.idUsers = f.users_idUsers WHERE following = ?;", id, (err, res) => {
       if (err) {
         console.log("Error: ", err);
         result(err, null);
@@ -89,6 +73,11 @@ class User {
       result(null, res);
     });
   }
+
+  
+  // FOLLOW REQUEST
+  // COLLAB REQUEST
+  // MENTOR REQUEST
 
     // REQUEST TO FOLLOW
     static followRequest(curId, id, result) {
@@ -126,6 +115,71 @@ class User {
           return;
         }
         result(null, res);
+      });
+    }
+
+    // ACCEPT FOLLOWER
+  static acceptFollower(reqID, result) {
+    sql.query("CALL acceptFollower(?);", reqID, (err, res) => {
+      if (err) {
+        console.log("Error: ", err);
+        result(err);
+        return;
+      }
+      // console.log("res", result);
+      result(null);
+    });
+  }
+
+    // ACCEPT COLLABORATOR
+    static acceptCollaborator(reqID, result) {
+      sql.query("CALL acceptCollaborator(?);", reqID, (err, res) => {
+        if (err) {
+          console.log("Error: ", err);
+          result(err);
+          return;
+        }
+        // console.log("res", result);
+        result(null);
+      });
+    }
+
+    // ACCEPT MENTOR
+    static acceptMentor(reqID, result) {
+      sql.query("CALL acceptMentor(?);", reqID, (err, res) => {
+        if (err) {
+          console.log("Error: ", err);
+          result(err);
+          return;
+        }
+        // console.log("res", result);
+        result(null);
+      });
+    }
+
+    // REJECT FOLLOWER
+    static rejectFollower(reqID, result) {
+      sql.query("DELETE FROM follow_requests WHERE id = ?;", reqID, (err, res) => {
+        if (err) {
+          console.log("Error: ", err);
+          result(err);
+          return;
+        }
+        // console.log("res", result);
+        result(null);
+      });
+    }
+
+    //REJECT COLLABORATOR / MENTOR
+    static rejectCollMen(reqID, result) {
+      sql.query("DELETE FROM collab_requests WHERE idcollab_requests = ?;", reqID, (err, res) => {
+        if (err) {
+          console.log("Error: ", err);
+          result(err);
+          return;
+        }
+        // console.log("res", result);
+        result(null);
       });
     }
 }

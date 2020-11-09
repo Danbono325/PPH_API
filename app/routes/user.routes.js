@@ -6,9 +6,6 @@ module.exports = (app) => {
   // Create a new User
   app.post("/createUser", users.create);
 
-  // Follow another User
-  app.post("/followUser", users.followUser);
-
   // Get followers
   app.get("/followers", users.getFollowers);
 
@@ -21,6 +18,21 @@ module.exports = (app) => {
   // Request to collab
   app.post("/collabRequest", users.collabRequest);
 
-  // // Request to mentor
+  // Request to mentor
   app.post("/mentorRequest", users.mentorRequest);
+
+  // Accept a follower
+  app.post("/acceptFollower", users.acceptFollower);
+
+  // Accept a colloborator
+  app.post("/acceptCollaborator", users.acceptCollaborator);
+
+  // Accept a mentor
+  app.post("/acceptMentor", users.acceptMentor);
+
+  // Reject Follower
+  app.delete("/rejectFollower", users.rejectFollower);
+
+  // Reject Collaborator/Mentor
+  app.delete("/rejectCollMen", users.rejectCollMen);
 };
