@@ -52,7 +52,7 @@ class User {
 
   // GET ALL FOLLOWING 
   static getFollowers(id, result) {
-    sql.query("SELECT idUsers, username FROM users u JOIN following f ON u.idUsers = f.users_idUsers WHERE following = ?;", id, (err, res) => {
+    sql.query("SELECT idUsers, username FROM users u JOIN following_user f ON u.idUsers = f.users_idUsers WHERE following_id = ?;", id, (err, res) => {
       if (err) {
         console.log("Error: ", err);
         result(err, null);
@@ -64,7 +64,7 @@ class User {
 
   // GET ALL FOLLOWING
   static getFollowing(id, result) {
-    sql.query("SELECT idUsers, username FROM users u JOIN following f ON f.following = u.idUsers WHERE f.users_idUsers = ?;", id, (err, res) => {
+    sql.query("SELECT idUsers, username FROM users u JOIN following_user f ON f.following_id = u.idUsers WHERE f.users_idUsers = ?;", id, (err, res) => {
       if (err) {
         console.log("Error: ", err);
         result(err, null);
