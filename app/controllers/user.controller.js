@@ -236,3 +236,37 @@ exports.rejectCollMen = (req, res) => {
     }
   }) 
 }
+
+// Get Follower Status
+exports.getFollowerStatus = (req, res) => {
+  // Validate request
+  checkbody(req);
+
+  User.getFollowerStatus(req.curUser, req.reqUser, (err, response) => {
+    if(err) {
+      res.status(500).send({
+        message:
+          err.message || "An Error occurred.",
+      });
+    } else {
+       res.send(response[0]);
+    }
+  }) 
+}
+
+// Get Follower Status
+exports.getCollMenStatus = (req, res) => {
+  // Validate request
+  checkbody(req);
+
+  User.getCollMenStatus(req.curUser, req.reqProject, (err, response) => {
+    if(err) {
+      res.status(500).send({
+        message:
+          err.message || "An Error occurred.",
+      });
+    } else {
+       res.send(response[0]);
+    }
+  }) 
+}

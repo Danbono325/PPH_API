@@ -50,7 +50,7 @@ class User {
     });
   }
 
-  // GET ALL FOLLOWING 
+  // GET ALL FOLLOWERS 
   static getFollowers(id, result) {
     sql.query("SELECT idUsers, username FROM users u JOIN following_user f ON u.idUsers = f.users_idUsers WHERE following_id = ?;", id, (err, res) => {
       if (err) {
@@ -170,7 +170,7 @@ class User {
       });
     }
 
-    //REJECT COLLABORATOR / MENTOR
+    // REJECT COLLABORATOR / MENTOR
     static rejectCollMen(reqID, result) {
       sql.query("DELETE FROM collab_requests WHERE idcollab_requests = ?;", reqID, (err, res) => {
         if (err) {
@@ -180,6 +180,38 @@ class User {
         }
         // console.log("res", result);
         result(null);
+      });
+    }
+
+    // -- RETURNS -1 IF NOT FOLLOWING OR REQUESTED
+    // -- RETURNS 0 IF FOLLOWING
+    // -- RETURNS 1 IF PENDING REQUEST
+
+    // Get follow status
+    static getFollowerStatus (curUser, reqUser, result) {
+      var fields = [curUser, reqUser];
+      sql.query("CALL getFollowerStatus(?, ?);", fields, (err, res) => {
+        if (err) {
+          console.log("Error: ", err);
+          result(err);
+          return;
+        }
+        // console.log("res", result);
+        result(null, res);
+      });
+    }
+
+    // Get collab / mentor status
+    static getCollMenStatus (curUser, reqProject, result) {
+      var fields = [curUser, reqProject];
+      sql.query("CALL getCollMenStatus(?, ?);", fields, (err, res) => {
+        if (err) {
+          console.log("Error: ", err);
+          result(err);
+          return;
+        }
+        // console.log("res", result);
+        result(null, res);
       });
     }
 }

@@ -12,6 +12,12 @@ module.exports = (app) => {
   // Get following
   app.get("/following", users.getFollowing);
 
+  // Get Follower Status
+  app.get("/followerStatus", users.getFollowerStatus);
+
+  // Get CollMen Status
+  app.get("/collMenStatus", users.getCollMenStatus);
+
   // Request to follow
   app.post("/followRequest", users.followRequest);
 
