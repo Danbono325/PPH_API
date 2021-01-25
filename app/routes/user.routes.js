@@ -1,10 +1,14 @@
-const passport = require("passport");
-
 module.exports = (app) => {
   const users = require("../controllers/user.controller.js");
 
-  // Create a new User
-  app.post("/createUser", users.create);
+  // Create a new User (Register) -- NEED TO ADD PASSPORT TO GET JWT TOKEN ON SUCCESSFULL LOGIN
+  app.post("/users", users.create);
+
+  // DELETE ACCOUNT
+
+  // UPDATE ACCOUNT
+
+  // GET ACCOUNT
 
   // Get followers
   app.get("/followers", users.getFollowers);
