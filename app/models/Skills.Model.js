@@ -2,6 +2,7 @@ const sql = require("./db");
 
 class Skills {
     constructor(skill) {
+        this.idTag = skill.idTag;
         this.skill = skill.name;
     }
 
@@ -17,6 +18,32 @@ class Skills {
             result(null, res);
         })
     }
+
+    // ADD SKILL
+    addSkill(curId, result) {
+      var fields = [curId, this.skill];
+        sql.query(`CALL addUserSkill(?, ?);`, fields, (err, res) => {
+            if(err) {
+                console.log("Error: ", err);
+                result(err, null);
+                return;
+            }
+            result(null, res[0]);
+        })
+    }
+
+    // REMOVE SKILL
+    removeSkill(curId, result) {
+        var fields = [curId, this.idTag];
+          sql.query(`CALL removeUserSkill(?, ?);`, fields, (err, res) => {
+              if(err) {
+                  console.log("Error: ", err);
+                  result(err, null);
+                  return;
+              }
+              result(null, res);
+          })
+      }
 
 }
 

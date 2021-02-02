@@ -28,9 +28,41 @@ exports.getUserSkills = (req, res) => {
 }
 
 exports.addSkill = (req, res) => {
+    // Validate request
+    checkbody(req);
 
+    const newSkill = req.body.newSkill;
+    const curId = req.body.curId;
+
+    const skill = new Skills({ name: newSkill });
+
+    // Save Customer in the database
+    skill.addSkill(curId, (err, data) => {
+        if (err)
+        res.status(500).send({
+            message:
+            err.message || "Some error occurred while adding to the user's skills."
+        });
+        else res.send(data);
+    });
 }
 
 exports.removeSkill = (req, res) => {
-    
+       // Validate request
+       checkbody(req);
+
+       const id = req.body.idTag;
+       const curId = req.body.curId;
+   
+       const skill = new Skills({ idTag: id });
+   
+       // Save Customer in the database
+       skill.removeSkill(curId, (err, data) => {
+           if (err)
+           res.status(500).send({
+               message:
+               err.message || "Some error occurred while adding to the user's skills."
+           });
+           else res.send(data);
+       });
 }
